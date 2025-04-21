@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: white;
+            transition: all 0.2s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+        }
+        .select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2563eb;
+        }
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        .result {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        .result h2 {
+            color: #0369a1;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .result p {
+            color: #0c4a6e;
+            margin: 0.5rem 0;
+        }
+        .result strong {
+            font-weight: 600;
+        }
+        .result small {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="card p-8 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Currency Converter</h1>
+        
+        <form action="/convert" method="post" class="space-y-6">
+            <div>
+                <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0" required 
+                       value="{{ amount if amount is defined else 1 }}"
+                       class="input">
+            </div>
+            
+            <div>
+                <label for="from_currency" class="block text-sm font-medium text-gray-700 mb-1">From Currency</label>
+                <select id="from_currency" name="from_currency" required class="select">
+                    {% for code, name in currencies.items() %}
+                        <option value="{{ code }}" {% if from_currency == code %}selected{% endif %}>{{ code }} - {{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="to_currency" class="block text-sm font-medium text-gray-700 mb-1">To Currency</label>
+                <select id="to_currency" name="to_currency" required class="select">
+                    {% for code, name in currencies.items() %}
+                        <option value="{{ code }}" {% if to_currency == code %}selected{% endif %}>{{ code }} - {{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="button w-full">Convert</button>
+        </form>
+
+        {% if converted_amount is defined %}
+        <div class="result">
+            <h2>Conversion Result</h2>
+            <p>{{ amount }} {{ from_currency }} = <strong>{{ converted_amount }} {{ to_currency }}</strong></p>
+            <p><small>Rate: 1 {{ from_currency }} = {{ rate }} {{ to_currency }}</small></p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> 
